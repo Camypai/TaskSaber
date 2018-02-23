@@ -20,8 +20,8 @@ namespace TaskSaber
             {
                 listNodes.Add(listNode);
                 listNode = listNode.Next;
-            } 
-            
+            }
+
             using (var sw = new StreamWriter(stream))
             {
                 foreach (var node in listNodes)
@@ -35,7 +35,7 @@ namespace TaskSaber
         {
             var listNodes = new List<ListNode>();
             var listNode = new ListNode();
-            var count = 0;
+            Count = 0;
 
             try
             {
@@ -43,13 +43,14 @@ namespace TaskSaber
                 {
                     while (!sr.EndOfStream)
                     {
-                        count++;
+
                         listNode.Data = sr.ReadLine();
                         var next = new ListNode();
                         listNode.Next = next;
                         listNodes.Add(listNode);
                         next.Prev = listNode;
                         listNode = next;
+                        Count++;
                     }
                 }
 

@@ -23,9 +23,9 @@ namespace TaskSaber
             var j = rand.Next(0, length);
             var res = node;
 
-            while (i<j)
+            while (i < j)
             {
-                res = res.Next ?? res;
+                res = res.Prev ?? res.Next;
                 i++;
             }
 
@@ -34,40 +34,52 @@ namespace TaskSaber
 
         public static void Main(string[] args)
         {
-            var node = new ListNode();
-            const int length = 10;
-
-            node.Data = rand.Next(0, 1000).ToString();
-
-            for (var i = 0; i < length; i++)
+            try
             {
-                node = SetNode(node);
+                var head = new ListNode();
+                var tail = new ListNode();
+                const int length = 10;
+
+                head.Data = rand.Next(0, 1000).ToString();
+
+                for (var i = 1; i < length; i++)
+                {
+                    head = SetNode(head);
+                }
+
+                tail = head;
+
+                for (var i = 0; i < length; i++)
+                {
+                    head.Rand = SetRandomNode(head, length);
+                    head = head.Prev ?? head;
+                }
+
+                var listRandSerialized = new ListRand
+                {
+                    Count = length,
+                    Head = head,
+                    Tail = tail
+                };
+
+                var fout = new FileStream("taskSaber.task", FileMode.Create);
+                listRandSerialized.Serialize(fout);
+
+                var listRandDeserialized = new ListRand();
+
+                var fin = new FileStream("taskSaber.task", FileMode.Open);
+                listRandDeserialized.Deserialize(fin);
+
+                var @equals = listRandSerialized.Tail.Data.Equals(listRandDeserialized.Tail.Data);
+                Console.WriteLine(@equals);
+                Console.WriteLine($"{listRandSerialized.Tail.Data} {listRandDeserialized.Tail.Data}");
+                Console.ReadLine();
             }
-            
-            for (var i = 0; i < length; i++)
+            catch (ListException ex)
             {
-                node.Rand = SetRandomNode(node, length);
-                node = node.Next;
+                Console.WriteLine($"{ex.Message} {ex.Source} {ex.StackTrace}");
+                Console.ReadLine();
             }
-
-            var listRandSerialized = new ListRand
-            {
-                Count = length,
-                Head = node,
-                Tail = node
-            };
-
-            var fout = new FileStream("taskSaber.task", FileMode.OpenOrCreate);
-            listRandSerialized.Serialize(fout);
-            
-            var listRandDeserialized = new ListRand();
-            
-            var fin = new FileStream("taskSaber.task", FileMode.Open);
-            listRandDeserialized.Deserialize(fin);
-
-            var @equals = listRandSerialized.Equals(listRandDeserialized);
-            Console.WriteLine(@equals);
-            Console.ReadLine();
         }
     }
 }
