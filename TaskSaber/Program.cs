@@ -11,10 +11,17 @@ namespace TaskSaber
         private static ListNode SetNode(ListNode prev)
         {
             var res = new ListNode();
-            res.Prev = prev;
-            res.Data = rand.Next(0, 1000).ToString();
-            prev.Next = res;
-            return res;
+            try
+            {
+                res.Prev = prev;
+                res.Data = rand.Next(0, 1000).ToString();
+                prev.Next = res;
+                return res;
+            }
+            catch (ListException)
+            {
+                throw;
+            }
         }
 
         private static ListNode SetRandomNode(ListNode node, int length)
@@ -23,13 +30,20 @@ namespace TaskSaber
             var j = rand.Next(0, length);
             var res = node;
 
-            while (i < j)
+            try
             {
-                res = res.Prev ?? res.Next;
-                i++;
-            }
+                while (i < j)
+                {
+                    res = res.Prev ?? res.Next;
+                    i++;
+                }
 
-            return res;
+                return res;
+            }
+            catch (ListException)
+            {
+                throw;
+            }
         }
 
         public static void Main(string[] args)

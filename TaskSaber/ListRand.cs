@@ -16,18 +16,25 @@ namespace TaskSaber
             var listNode = new ListNode();
             listNode = Head;
 
-            while (listNode != null)
+            try
             {
-                listNodes.Add(listNode);
-                listNode = listNode.Next;
-            }
-
-            using (var sw = new StreamWriter(stream))
-            {
-                foreach (var node in listNodes)
+                while (listNode != null)
                 {
-                    sw.WriteLine($"{node.Data}:{listNodes.IndexOf(node.Rand)}");
+                    listNodes.Add(listNode);
+                    listNode = listNode.Next;
                 }
+
+                using (var sw = new StreamWriter(stream))
+                {
+                    foreach (var node in listNodes)
+                    {
+                        sw.WriteLine($"{node.Data}:{listNodes.IndexOf(node.Rand)}");
+                    }
+                }
+            }
+            catch (ListException ex)
+            {
+                Console.WriteLine($"{ex.Message} {ex.Source} {ex.StackTrace}");
             }
         }
 
